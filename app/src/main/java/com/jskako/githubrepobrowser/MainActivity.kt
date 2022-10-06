@@ -13,6 +13,12 @@ import com.jskako.githubrepobrowser.presentation.main.MainViewModel
 import com.jskako.githubrepobrowser.ui.theme.GithubRepoBrowserTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO - Check nullable parameters for data class
+// TODO - Check if parameter can be send directly by link
+// TODO - Remove Log.e()
+// Todo - Remove star imports
+// Todo - Check for unused imports
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

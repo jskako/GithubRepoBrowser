@@ -1,7 +1,7 @@
 package com.jskako.githubrepobrowser.data.remote
 
-import android.util.Log
-import com.jskako.githubrepobrowser.data.remote.dto.GithubRepositoryDto
+
+import com.jskako.githubrepobrowser.data.remote.dto.RepositoriesDto
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -20,16 +20,11 @@ class GithubServiceImpl(
             val searchByLanguage = if (language.isNotEmpty()) {
                 "+language:$language"
             } else ""
-            val url = "${GithubService.Endpoints.GetAllRepositories.url}$repositoryName$searchByLanguage&sort=stars&order=desc"
-                Log.e("Url:", "Url: $url")
-            val response: List<GithubRepositoryDto> =
-                client.get(url)
-                    .body()
-            response.map {
-                val test = it.toGithubRepo()
-                Log.e("Test:", "Test: $test")
-                test
-            }
+            val url =
+                "${GithubService.Endpoints.GetAllRepositories.url}$repositoryName$searchByLanguage&sort=stars&order=desc"
+            client.get(url)
+                .body<RepositoriesDto>().toList()
+
         } catch (e: RedirectResponseException) {
             // 3xx - responses
             println("Error: ${e.response.status.description}")

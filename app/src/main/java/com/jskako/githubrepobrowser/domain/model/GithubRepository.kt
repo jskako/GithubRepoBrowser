@@ -1,8 +1,10 @@
 package com.jskako.githubrepobrowser.domain.model
 
+import com.jskako.githubrepobrowser.data.remote.dto.OwnerDto
+
 data class GithubRepository(
     val repositoryName: String,
-    val owner: GithubUser,
+    val owner: OwnerDto,
     val description: String,
     val url: String,
     val watchersNumber: Int,
