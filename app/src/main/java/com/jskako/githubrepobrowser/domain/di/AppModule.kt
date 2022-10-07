@@ -1,4 +1,4 @@
-package com.jskako.githubrepobrowser.di
+package com.jskako.githubrepobrowser.domain.di
 
 import com.jskako.githubrepobrowser.data.remote.GithubService
 import com.jskako.githubrepobrowser.data.remote.GithubServiceImpl

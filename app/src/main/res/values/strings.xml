@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GithubRepoBrowser</string>
+    <string name="picture_holder_title">Picture holder</string>
 </resources>
