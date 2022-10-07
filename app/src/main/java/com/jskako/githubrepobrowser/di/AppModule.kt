@@ -2,6 +2,8 @@ package com.jskako.githubrepobrowser.di
 
 import com.jskako.githubrepobrowser.data.remote.GithubService
 import com.jskako.githubrepobrowser.data.remote.GithubServiceImpl
+import com.jskako.githubrepobrowser.domain.use_case.GetRepositoriesUseCase
+import com.jskako.githubrepobrowser.domain.use_case.MainUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +33,13 @@ object AppModule {
     @Singleton
     fun provideGithubService(client: HttpClient): GithubService {
         return GithubServiceImpl(client)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMainUseCases(githubService: GithubService): MainUseCases {
+        return MainUseCases(
+            getRepositories = GetRepositoriesUseCase(githubService)
+        )
     }
 }
