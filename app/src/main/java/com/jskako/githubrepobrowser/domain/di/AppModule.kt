@@ -4,6 +4,7 @@ import com.jskako.githubrepobrowser.data.remote.GithubService
 import com.jskako.githubrepobrowser.data.remote.GithubServiceImpl
 import com.jskako.githubrepobrowser.domain.use_case.GetRepositoriesUseCase
 import com.jskako.githubrepobrowser.domain.use_case.MainUseCases
+import com.jskako.githubrepobrowser.domain.use_case.SortRepositoriesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +40,8 @@ object AppModule {
     @Singleton
     fun provideMainUseCases(githubService: GithubService): MainUseCases {
         return MainUseCases(
-            getRepositories = GetRepositoriesUseCase(githubService)
+            getRepositories = GetRepositoriesUseCase(githubService),
+            sortRepositories = SortRepositoriesUseCase()
         )
     }
 }

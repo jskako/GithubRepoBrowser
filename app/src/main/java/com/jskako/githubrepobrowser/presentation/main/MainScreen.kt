@@ -1,9 +1,21 @@
 package com.jskako.githubrepobrowser.presentation.main
 
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -11,11 +23,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import com.jskako.githubrepobrowser.presentation.main.components.CardComposable
+import com.jskako.githubrepobrowser.presentation.main.components.DialogBoxComposable
+import com.jskako.githubrepobrowser.presentation.main.components.OrderSection
 
 @Composable
 fun MainScreen(
@@ -29,33 +52,80 @@ fun MainScreen(
 
 @Composable
 fun createSearchButton(viewModel: MainViewModel, navController: NavController) {
-    //val state = viewModel.state.value
-    val scope = rememberCoroutineScope()
+
+    val state = viewModel.state.value
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // TODO - Open search settings
+                    openDialog = true
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Add note")
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Github Repository Filter")
+            }
+            if (openDialog) {
+                DialogBoxComposable {
+                    openDialog = false
+                }
             }
         }
     ) {
-        createGithubRepoList(viewModel.repositoryItems, navController)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Github Repository Search",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(MainEvent.ToggleOrderSection)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Sort,
+                        contentDescription = "Sort"
+                    )
+                }
+            }
+            AnimatedVisibility(
+                visible = state.isOrderSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                OrderSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    repositoryOrder = state.repositoryOrder,
+                    onOrderChange = {
+                        viewModel.onEvent(MainEvent.Order(it))
+                    }
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            createGithubRepoList(viewModel.repositoryItems, navController)
+        }
     }
 }
 
 @Composable
 fun createGithubRepoList(items: List<GithubRepository>, navController: NavController) {
-
-    Surface(color = MaterialTheme.colorScheme.background) {
-        LazyColumn {
-            items(items) { item ->
-                CardComposable(item, navController)
-            }
+    LazyColumn {
+        items(items) { item ->
+            CardComposable(item, navController)
         }
     }
 }
