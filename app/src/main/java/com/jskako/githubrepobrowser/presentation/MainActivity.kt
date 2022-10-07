@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jskako.githubrepobrowser.presentation.details.DetailsScreen
 import com.jskako.githubrepobrowser.presentation.main.MainScreen
+import com.jskako.githubrepobrowser.presentation.user.UserScreen
 import com.jskako.githubrepobrowser.presentation.util.Screen
 import com.jskako.githubrepobrowser.ui.theme.GithubRepoBrowserTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +38,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.DetailsScreen.route) {
                             DetailsScreen(navController = navController)
+                        }
+                        composable(route = Screen.UserScreen.route) {
+                            UserScreen(navController = navController)
                         }
                     }
                 }

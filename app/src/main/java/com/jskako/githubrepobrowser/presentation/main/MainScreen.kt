@@ -8,6 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.rememberCoroutineScope
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import com.jskako.githubrepobrowser.presentation.main.components.CardComposable
 
@@ -18,7 +24,28 @@ fun MainScreen(
 ) {
 
     viewModel.getAllRepositories("tetris")
-    createGithubRepoList(viewModel.repositoryItems, navController)
+    createSearchButton(viewModel, navController)
+}
+
+@Composable
+fun createSearchButton(viewModel: MainViewModel, navController: NavController) {
+    //val state = viewModel.state.value
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    // TODO - Open search settings
+                },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Add note")
+            }
+        }
+    ) {
+        createGithubRepoList(viewModel.repositoryItems, navController)
+    }
 }
 
 @Composable
