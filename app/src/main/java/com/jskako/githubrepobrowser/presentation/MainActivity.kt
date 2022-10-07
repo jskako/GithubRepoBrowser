@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jskako.githubrepobrowser.R
+import com.jskako.githubrepobrowser.domain.splash.KeepSplashAlive
 import com.jskako.githubrepobrowser.presentation.details.DetailsScreen
 import com.jskako.githubrepobrowser.presentation.main.MainScreen
 import com.jskako.githubrepobrowser.presentation.user.UserScreen
@@ -21,7 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        changeBarsColor()
         super.onCreate(savedInstanceState)
+        setSplashScreen()
         setContent {
             GithubRepoBrowserTheme {
                 Surface(
@@ -46,5 +51,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun setSplashScreen() {
+        KeepSplashAlive(installSplashScreen()).init()
+    }
+
+    private fun changeBarsColor() {
+        window.statusBarColor = getColor(R.color.purple_40)
+        window.navigationBarColor = getColor(R.color.purple_40)
     }
 }

@@ -42,9 +42,9 @@ fun CardComposable(item: GithubRepository, navController: NavController) {
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            IconText(image = R.drawable.fork, description = item.forksNumber.toString())
-            IconText(image = R.drawable.watch, description = item.watchersNumber.toString())
-            IconText(image = R.drawable.star, description = item.starsNumber.toString())
+            IconText(image = R.drawable.ic_fork, description = item.forksNumber.toString())
+            IconText(image = R.drawable.ic_watch, description = item.watchersNumber.toString())
+            IconText(image = R.drawable.ic_star, description = item.starsNumber.toString())
         }
     }
 }
