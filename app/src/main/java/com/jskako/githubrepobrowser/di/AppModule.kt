@@ -6,11 +6,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import javax.inject.Singleton
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.plugins.logging.Logging
 
 @Module
 @InstallIn(SingletonComponent::class)

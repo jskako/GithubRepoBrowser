@@ -8,25 +8,31 @@ data class RepositoriesDto(
     val items: List<ItemsDto>,
     val total_count: Int
 ) {
-    fun toList(): List<GithubRepository> {
+    fun getAllItems(): List<GithubRepository> {
         return items.map {
             GithubRepository(
-                repositoryName = it.name,
-                owner = it.owner,
+                repositoryName = it.name ?: "",
+                owner = it.owner ?: getEmptyOwnerDtoObject(),
                 description = it.description ?: "",
-                url = it.url,
-                watchersNumber = it.watchers_count,
-                forksNumber = it.forks_count,
-                issuesNumber = it.open_issues_count,
-                starsNumber = it.stargazers_count,
-                creationDate = it.created_at,
-                modificationDate = it.updated_at,
-                programmingLanguageUsed = it.language,
+                url = it.url ?: "",
+                watchersNumber = it.watchers_count ?: 0,
+                forksNumber = it.forks_count ?: 0,
+                issuesNumber = it.open_issues_count ?: 0,
+                starsNumber = it.stargazers_count ?: 0,
+                creationDate = it.created_at ?: "",
+                modificationDate = it.updated_at ?: "",
+                programmingLanguageUsed = it.language ?: "",
                 visibility = when (it.visibility) {
-                    "public" -> true
+                    Visibility.PUBLIC.type -> true
+                    Visibility.PRIVATE.type -> false
                     else -> false
                 }
             )
         }
     }
+}
+
+private enum class Visibility(val type: String) {
+    PUBLIC("public"),
+    PRIVATE("private")
 }

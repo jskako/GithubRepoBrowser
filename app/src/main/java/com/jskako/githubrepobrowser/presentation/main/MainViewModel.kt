@@ -1,6 +1,5 @@
 package com.jskako.githubrepobrowser.presentation.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jskako.githubrepobrowser.data.remote.GithubService
@@ -11,12 +10,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val githubService: GithubService
-): ViewModel() {
+) : ViewModel() {
 
-    fun getAllRepositories(repositoryName: String, language: String = "") {
+    fun getAllRepositories(repositoryName: String, language: String = "") =
         viewModelScope.launch {
-            val test = githubService.getAllRepositories(repositoryName, language)
-            Log.e("My test:", "Test: $test")
+            githubService.getAllRepositories(repositoryName, language)
         }
-    }
 }
