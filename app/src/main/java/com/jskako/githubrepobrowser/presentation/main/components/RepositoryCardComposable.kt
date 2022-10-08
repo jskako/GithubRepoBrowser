@@ -15,7 +15,12 @@ import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import com.jskako.githubrepobrowser.presentation.util.Screen
 
 @Composable
-fun CardComposable(item: GithubRepository, navController: NavController) {
+fun CardComposable(
+    item: GithubRepository,
+    navController: NavController,
+    menuItems: List<String>,
+    onClickCallbacks: List<() -> Unit>,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +36,7 @@ fun CardComposable(item: GithubRepository, navController: NavController) {
                 .height(intrinsicSize = IntrinsicSize.Max)
                 .padding(10.dp)
         ) {
-            ProfilePictureComposable(item.owner.avatar_url)
+            ProfilePictureComposable(item, menuItems, onClickCallbacks)
             ProfileContentComposable(item)
         }
 

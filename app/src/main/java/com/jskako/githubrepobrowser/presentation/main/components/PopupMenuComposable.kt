@@ -5,6 +5,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
+
 @Composable
 fun PopupMenu(
     menuItems: List<String>,
@@ -19,7 +20,7 @@ fun PopupMenu(
         menuItems.forEachIndexed { index, item ->
             DropdownMenuItem(onClick = {
                 onDismiss()
-                onClickCallbacks[index]
+                onClickCallbacks[index]()
             }) {
                 Text(text = item)
             }

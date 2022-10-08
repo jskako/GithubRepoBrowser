@@ -1,6 +1,8 @@
 package com.jskako.githubrepobrowser.presentation.main
 
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -36,23 +38,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
+import com.jskako.githubrepobrowser.domain.util.openInBrowser
+import com.jskako.githubrepobrowser.domain.util.toast
 import com.jskako.githubrepobrowser.presentation.main.components.CardComposable
 import com.jskako.githubrepobrowser.presentation.main.components.DialogBoxComposable
 import com.jskako.githubrepobrowser.presentation.main.components.OrderSection
 
 @Composable
 fun MainScreen(
+    context: Context,
     navController: NavController,
     viewModel: MainViewModel = hiltViewModel()
 ) {
 
     viewModel.getAllRepositories("tetris")
-    createSearchButton(viewModel, navController)
+    createMainScreen(context, viewModel, navController)
 }
 
 @Composable
-fun createSearchButton(viewModel: MainViewModel, navController: NavController) {
-
+fun createMainScreen(context: Context, viewModel: MainViewModel, navController: NavController) {
     val state = viewModel.state.value
     var openDialog by remember {
         mutableStateOf(false)
@@ -66,7 +70,10 @@ fun createSearchButton(viewModel: MainViewModel, navController: NavController) {
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Github Repository Filter")
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Github Repository Filter"
+                )
             }
             if (openDialog) {
                 DialogBoxComposable {
@@ -116,16 +123,29 @@ fun createSearchButton(viewModel: MainViewModel, navController: NavController) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            createGithubRepoList(viewModel.repositoryItems, navController)
+            createGithubRepoList(context, viewModel.repositoryItems, navController)
         }
     }
 }
 
 @Composable
-fun createGithubRepoList(items: List<GithubRepository>, navController: NavController) {
+fun createGithubRepoList(
+    context: Context,
+    items: List<GithubRepository>,
+    navController: NavController
+) {
     LazyColumn {
         items(items) { item ->
-            CardComposable(item, navController)
+            CardComposable(
+                item,
+                navController,
+                listOf("View", "Open in browser"),
+                listOf(
+                    { "View opened".toast(context) },
+                    {
+                        openInBrowser(context, Uri.parse(item.owner.html_url))
+                    })
+            )
         }
     }
 }
