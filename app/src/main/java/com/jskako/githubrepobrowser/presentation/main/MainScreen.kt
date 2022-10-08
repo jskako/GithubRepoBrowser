@@ -142,7 +142,12 @@ fun createGithubRepoList(
                 navController,
                 listOf("View", "Open in browser"),
                 listOf(
-                    { navController.navigate(Screen.UserScreen.route) }, // This will send data to user screen
+                    {
+                        navController.navigate(
+                            Screen.UserScreen.route +
+                                    "?itemIndex=${index}"
+                        )
+                    }, // This will send data to user screen
                     { openInBrowser(context, Uri.parse(item.owner.html_url)) }
                 )
             )

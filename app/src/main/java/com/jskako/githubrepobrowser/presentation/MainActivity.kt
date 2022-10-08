@@ -8,9 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jskako.githubrepobrowser.R
 import com.jskako.githubrepobrowser.domain.splash.KeepSplashAlive
 import com.jskako.githubrepobrowser.presentation.details.DetailsScreen
@@ -44,8 +46,23 @@ class MainActivity : ComponentActivity() {
                         composable(route = Screen.DetailsScreen.route) {
                             DetailsScreen(navController = navController)
                         }
-                        composable(route = Screen.UserScreen.route) {
-                            UserScreen(navController = navController)
+                        composable(
+                            route = Screen.UserScreen.route +
+                                    "?itemIndex={itemIndex}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "itemIndex"
+                                ) {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            val itemIndex = it.arguments?.getInt("itemIndex") ?: -1
+                            UserScreen(
+                                navController = navController,
+                                itemIndex = itemIndex
+                            )
                         }
                     }
                 }
