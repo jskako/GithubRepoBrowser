@@ -1,6 +1,7 @@
 package com.jskako.githubrepobrowser.domain.model
 
 import com.jskako.githubrepobrowser.data.remote.dto.OwnerDto
+import com.jskako.githubrepobrowser.data.remote.dto.getEmptyOwnerDtoObject
 
 data class GithubRepository(
     val repositoryName: String,
@@ -16,3 +17,20 @@ data class GithubRepository(
     val programmingLanguageUsed: String,
     val visibility: Boolean
 )
+
+fun getEmptyGithubRepository(): GithubRepository {
+    return GithubRepository(
+        repositoryName = "",
+        owner = getEmptyOwnerDtoObject(),
+        description = "",
+        url = "",
+        watchersNumber = 0,
+        forksNumber = 0,
+        issuesNumber = 0,
+        starsNumber = 0,
+        creationDate = "",
+        modificationDate = "",
+        programmingLanguageUsed = "",
+        visibility = false
+    )
+}

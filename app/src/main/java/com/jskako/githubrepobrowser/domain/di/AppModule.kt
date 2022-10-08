@@ -5,6 +5,7 @@ import com.jskako.githubrepobrowser.data.remote.GithubServiceImpl
 import com.jskako.githubrepobrowser.domain.use_case.GetRepositoriesUseCase
 import com.jskako.githubrepobrowser.domain.use_case.MainUseCases
 import com.jskako.githubrepobrowser.domain.use_case.SortRepositoriesUseCase
+import com.jskako.githubrepobrowser.data.shared.SharedRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,4 +45,8 @@ object AppModule {
             sortRepositories = SortRepositoriesUseCase()
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideSharedData(): SharedRepositoryImpl = SharedRepositoryImpl
 }

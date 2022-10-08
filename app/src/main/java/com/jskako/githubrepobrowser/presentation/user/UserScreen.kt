@@ -10,6 +10,5 @@ fun UserScreen(
     navController: NavController,
     viewModel: UserViewModel = hiltViewModel()
 ) {
-
     Text("Hello World from Details")
 }

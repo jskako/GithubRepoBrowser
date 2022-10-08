@@ -1,29 +1,26 @@
 package com.jskako.githubrepobrowser.presentation.main
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import com.jskako.githubrepobrowser.domain.use_case.MainUseCases
 import com.jskako.githubrepobrowser.domain.util.RepositoryOrder
+import com.jskako.githubrepobrowser.data.shared.SharedRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val mainUseCases: MainUseCases
+    private val mainUseCases: MainUseCases,
+    private var sharedRepositoryData: SharedRepositoryImpl
 ) : ViewModel() {
 
     private var orderRepositoriesJob: Job? = null
-
-    private val _repositoryItems = mutableStateListOf<GithubRepository>()
-    val repositoryItems: SnapshotStateList<GithubRepository> = _repositoryItems
+    val repositoryItems = sharedRepositoryData.getRepositoryItems()
 
     private val _state = mutableStateOf(MainState())
     val state: State<MainState> = _state
@@ -34,8 +31,8 @@ class MainViewModel @Inject constructor(
         }
 
     private fun refreshRepositoryList(repositories: List<GithubRepository>) {
-        _repositoryItems.clear()
-        _repositoryItems.addAll(repositories)
+        sharedRepositoryData.clearRepositoryItems()
+        sharedRepositoryData.addRepositoryItems(repositories)
     }
 
     fun onEvent(event: MainEvent) {

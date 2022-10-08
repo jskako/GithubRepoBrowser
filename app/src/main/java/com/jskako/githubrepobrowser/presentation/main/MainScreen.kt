@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -39,10 +40,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
 import com.jskako.githubrepobrowser.domain.util.openInBrowser
-import com.jskako.githubrepobrowser.domain.util.toast
 import com.jskako.githubrepobrowser.presentation.main.components.CardComposable
 import com.jskako.githubrepobrowser.presentation.main.components.DialogBoxComposable
 import com.jskako.githubrepobrowser.presentation.main.components.OrderSection
+import com.jskako.githubrepobrowser.presentation.util.Screen
 
 @Composable
 fun MainScreen(
@@ -135,16 +136,15 @@ fun createGithubRepoList(
     navController: NavController
 ) {
     LazyColumn {
-        items(items) { item ->
+        itemsIndexed(items) { index, item ->
             CardComposable(
                 item,
                 navController,
                 listOf("View", "Open in browser"),
                 listOf(
-                    { "View opened".toast(context) },
-                    {
-                        openInBrowser(context, Uri.parse(item.owner.html_url))
-                    })
+                    { navController.navigate(Screen.UserScreen.route) }, // This will send data to user screen
+                    { openInBrowser(context, Uri.parse(item.owner.html_url)) }
+                )
             )
         }
     }
