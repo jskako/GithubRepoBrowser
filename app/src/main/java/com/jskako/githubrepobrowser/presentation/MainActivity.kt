@@ -43,8 +43,23 @@ class MainActivity : ComponentActivity() {
                         composable(route = Screen.MainScreen.route) {
                             MainScreen(this@MainActivity, navController = navController)
                         }
-                        composable(route = Screen.DetailsScreen.route) {
-                            DetailsScreen(navController = navController)
+                        composable(
+                            route = Screen.DetailsScreen.route +
+                                    "?itemIndex={itemIndex}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "itemIndex"
+                                ) {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            val itemIndex = it.arguments?.getInt("itemIndex") ?: -1
+                            DetailsScreen(
+                                navController = navController,
+                                itemIndex = itemIndex
+                            )
                         }
                         composable(
                             route = Screen.UserScreen.route +

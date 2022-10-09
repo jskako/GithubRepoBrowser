@@ -8,8 +8,9 @@ import androidx.navigation.NavController
 @Composable
 fun DetailsScreen(
     navController: NavController,
+    itemIndex: Int,
     viewModel: DetailsViewModel = hiltViewModel()
 ) {
-
+    viewModel.getRepositoryDataBy(itemIndex)
     Text("Hello World from Details")
 }

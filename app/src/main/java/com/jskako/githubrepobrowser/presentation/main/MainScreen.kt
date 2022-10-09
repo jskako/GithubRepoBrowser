@@ -149,7 +149,8 @@ fun createGithubRepoList(
                         )
                     }, // This will send data to user screen
                     { openInBrowser(context, Uri.parse(item.owner.html_url)) }
-                )
+                ),
+                listOf { navController.navigate(Screen.DetailsScreen.route + "?itemIndex=${index}") }
             )
         }
     }

@@ -18,8 +18,9 @@ import com.jskako.githubrepobrowser.presentation.util.Screen
 fun CardComposable(
     item: GithubRepository,
     navController: NavController,
-    menuItems: List<String>,
-    onClickCallbacks: List<() -> Unit>,
+    pictureMenuItems: List<String>,
+    onPictureClickCallbacks: List<() -> Unit>,
+    onCardClickCallbacks: List<() -> Unit>,
 ) {
     Card(
         modifier = Modifier
@@ -28,7 +29,9 @@ fun CardComposable(
             .background(color = Helper.getWhiteColor())
             .padding(10.dp)
             .clickable {
-                navController.navigate(Screen.DetailsScreen.route)
+                onCardClickCallbacks.forEach {
+                    it()
+                }
             },
     ) {
         Row(
@@ -36,7 +39,7 @@ fun CardComposable(
                 .height(intrinsicSize = IntrinsicSize.Max)
                 .padding(10.dp)
         ) {
-            ProfilePictureComposable(item, menuItems, onClickCallbacks)
+            ProfilePictureComposable(item, pictureMenuItems, onPictureClickCallbacks)
             ProfileContentComposable(item)
         }
 
