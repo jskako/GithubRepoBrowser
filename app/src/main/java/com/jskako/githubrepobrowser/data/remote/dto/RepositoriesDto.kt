@@ -14,7 +14,7 @@ data class RepositoriesDto(
                 repositoryName = it.name ?: "",
                 owner = it.owner ?: getEmptyOwnerDtoObject(),
                 description = it.description ?: "",
-                url = it.url ?: "",
+                url = it.html_url ?: "",
                 watchersNumber = it.watchers_count ?: 0,
                 forksNumber = it.forks_count ?: 0,
                 issuesNumber = it.open_issues_count ?: 0,

@@ -1,7 +1,6 @@
 package com.jskako.githubrepobrowser.presentation.main
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
@@ -9,8 +8,8 @@ import com.jskako.githubrepobrowser.domain.use_case.MainUseCases
 import com.jskako.githubrepobrowser.domain.util.RepositoryOrder
 import com.jskako.githubrepobrowser.data.shared.SharedRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,47 +20,78 @@ class MainViewModel @Inject constructor(
 
     private var orderRepositoriesJob: Job? = null
     val repositoryItems = sharedRepositoryData.getRepositoryItems()
+    private val _state = mutableStateOf(OrderState())
+    val orderState: State<OrderState> = _state
+    
+    val textQueryListener = MutableStateFlow("")
+    val textLanguageListener = MutableStateFlow("")
 
-    private val _state = mutableStateOf(MainState())
-    val state: State<MainState> = _state
 
-    fun getAllRepositories(repositoryName: String, language: String = "") =
-        viewModelScope.launch {
-            refreshRepositoryList(mainUseCases.getRepositories(repositoryName, language))
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val fetchQuerySuccessfully = textQueryListener.debounce(2000)
+        .distinctUntilChanged()
+        .flatMapLatest {
+            if(it.isNotEmpty()) {
+                getAllRepositories(it, textLanguageListener.value)
+            } else {
+                flowOf(FetchSuccessful.IGNORE)
+            }
         }
 
-    private fun refreshRepositoryList(repositories: List<GithubRepository>) {
-        sharedRepositoryData.clearRepositoryItems()
-        sharedRepositoryData.addRepositoryItems(repositories)
+    private suspend fun getAllRepositories(
+        repositoryName: String,
+        language: String = ""
+    ): Flow<FetchSuccessful> {
+        return flow {
+            emit(refreshRepositoryList(mainUseCases.getRepositories(repositoryName, language)))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private fun refreshRepositoryList(
+        repositories: List<GithubRepository>,
+        showToast: Boolean = true
+    ): FetchSuccessful {
+        return if (repositories.isNotEmpty()) {
+            sharedRepositoryData.clearRepositoryItems()
+            sharedRepositoryData.addRepositoryItems(repositories)
+            if (showToast) FetchSuccessful.SUCCESSFUL else FetchSuccessful.IGNORE
+        } else {
+            if (showToast) FetchSuccessful.NOT_SUCCESSFUL else FetchSuccessful.IGNORE
+        }
     }
 
     fun onEvent(event: MainEvent) {
         when (event) {
             is MainEvent.Order -> {
-                if (state.value.repositoryOrder::class == event.repositoryOrder::class &&
-                    state.value.repositoryOrder.orderType == event.repositoryOrder.orderType
+                if (orderState.value.repositoryOrder::class == event.repositoryOrder::class &&
+                    orderState.value.repositoryOrder.orderType == event.repositoryOrder.orderType
                 ) {
                     return
                 }
                 changeRepositoriesOrder(event.repositoryOrder)
             }
             is MainEvent.ToggleOrderSection -> {
-                _state.value = state.value.copy(
-                    isOrderSectionVisible = !state.value.isOrderSectionVisible
+                _state.value = orderState.value.copy(
+                    isOrderSectionVisible = !orderState.value.isOrderSectionVisible
                 )
             }
         }
     }
 
     private fun changeRepositoriesOrder(repositoryOrder: RepositoryOrder) {
-        _state.value = state.value.copy(
+        _state.value = orderState.value.copy(
             repositoryOrder = repositoryOrder
         )
         orderRepositoriesJob?.cancel()
-        /*orderRepositoriesJob = mainUseCases.sortRepositories(_repositoryItems, repositoryOrder)
-            .collectLatest { repositoryList ->
-                refreshRepositoryList(repositoryList)
-            }
-            .launchIn(viewModelScope)*/
+        orderRepositoriesJob =
+            mainUseCases.sortRepositories(flowOf(repositoryItems), repositoryOrder)
+                .onEach { repositoryList ->
+                    refreshRepositoryList(repositoryList, false)
+                }
+                .launchIn(viewModelScope)
     }
+}
+
+enum class FetchSuccessful {
+    SUCCESSFUL, NOT_SUCCESSFUL, IGNORE
 }

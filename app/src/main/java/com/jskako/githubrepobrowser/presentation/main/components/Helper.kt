@@ -9,6 +9,6 @@ object Helper {
 
     fun getGreenColor() = getColor("9963890a")
     fun getWhiteColor() = getColor("FFFFFFFF")
-    fun getRedColor() = getColor("99ac162c")
+    fun getLightGrayColor() = getColor("D3D3D3")
 
 }

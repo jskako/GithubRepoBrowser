@@ -1,16 +1,30 @@
 package com.jskako.githubrepobrowser.presentation.user
 
-import androidx.compose.material3.Text
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.jskako.githubrepobrowser.domain.model.GithubRepository
+import com.jskako.githubrepobrowser.presentation.main.components.createPreviewScreen
 
 @Composable
 fun UserScreen(
-    navController: NavController,
+    context: Context,
     itemIndex: Int,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     viewModel.getRepositoryDataBy(itemIndex)
-    Text("Hello World from Details")
+    createUserScreen(context, viewModel.repositoryItem.value)
+}
+
+@Composable
+fun createUserScreen(
+    context: Context,
+    githubRepository: GithubRepository
+) {
+    createPreviewScreen(
+        context,
+        githubRepository.owner.getTitles(),
+        githubRepository.owner.getListOfValues(),
+        githubRepository.owner.avatar_url ?: ""
+    )
 }

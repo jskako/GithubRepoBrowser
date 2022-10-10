@@ -16,7 +16,37 @@ data class GithubRepository(
     val modificationDate: String,
     val programmingLanguageUsed: String,
     val visibility: Boolean
-)
+) {
+    fun getTitles(): List<String> = listOf(
+        "Repository name",
+        "Owner",
+        "Description",
+        "Url",
+        "Watchers",
+        "Forks",
+        "Issues",
+        "Stars",
+        "Creation date",
+        "Modification date",
+        "Programming languages",
+        "Visibility"
+    )
+
+    fun getListOfValues(): List<String> = listOf(
+        repositoryName,
+        owner.login ?: "",
+        description,
+        url,
+        watchersNumber.toString(),
+        forksNumber.toString(),
+        issuesNumber.toString(),
+        starsNumber.toString(),
+        creationDate,
+        modificationDate,
+        programmingLanguageUsed,
+        visibility.toString()
+    )
+}
 
 fun getEmptyGithubRepository(): GithubRepository {
     return GithubRepository(

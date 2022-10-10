@@ -1,0 +1,14 @@
+ext.flavorConfig = {
+
+    flavorDimensions 'default'
+    productFlavors {
+        free {
+            dimension 'default'
+            applicationIdSuffix = '.free'
+        }
+        pro {
+            dimension 'default'
+            applicationIdSuffix = '.pro'
+        }
+    }
+}

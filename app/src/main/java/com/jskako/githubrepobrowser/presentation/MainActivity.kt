@@ -41,7 +41,10 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.MainScreen.route
                     ) {
                         composable(route = Screen.MainScreen.route) {
-                            MainScreen(this@MainActivity, navController = navController)
+                            MainScreen(
+                                this@MainActivity,
+                                navController = navController
+                            )
                         }
                         composable(
                             route = Screen.DetailsScreen.route +
@@ -57,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val itemIndex = it.arguments?.getInt("itemIndex") ?: -1
                             DetailsScreen(
-                                navController = navController,
+                                this@MainActivity,
                                 itemIndex = itemIndex
                             )
                         }
@@ -75,7 +78,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val itemIndex = it.arguments?.getInt("itemIndex") ?: -1
                             UserScreen(
-                                navController = navController,
+                                this@MainActivity,
                                 itemIndex = itemIndex
                             )
                         }

@@ -20,7 +20,49 @@ data class OwnerDto(
     val subscriptions_url: String?,
     val type: String?,
     val url: String?
-)
+) {
+    fun getTitles(): List<String> = listOf(
+        "Avatar Url",
+        "Events Url",
+        "Followers Url",
+        "Following Url",
+        "Gists Url",
+        "Gravatar Id",
+        "HTML Url",
+        "ID",
+        "Login name",
+        "Node ID",
+        "Organisations Url",
+        "Received events Url",
+        "Repos Url",
+        "Site admin",
+        "Starred Url",
+        "Subscriptions Url",
+        "Type",
+        "Url"
+    )
+
+    fun getListOfValues(): List<String> = listOf(
+        avatar_url ?: "",
+        events_url ?: "",
+        followers_url ?: "",
+        following_url ?: "",
+        gists_url ?: "",
+        gravatar_id ?: "",
+        html_url ?: "",
+        id.toString(),
+        login ?: "",
+        node_id ?: "",
+        organizations_url ?: "",
+        received_events_url ?: "",
+        repos_url ?: "",
+        site_admin.toString(),
+        starred_url ?: "",
+        subscriptions_url ?: "",
+        type ?: "",
+        url ?: ""
+    )
+}
 
 fun getEmptyOwnerDtoObject(): OwnerDto {
     return OwnerDto(

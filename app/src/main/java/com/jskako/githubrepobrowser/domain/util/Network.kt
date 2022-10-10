@@ -23,7 +23,5 @@ fun openInBrowser(context: Context, link: Uri) {
     val defaultBrowser =
         Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
     defaultBrowser.data = link
-    if (defaultBrowser.resolveActivity(context.packageManager) != null) {
-        context.startActivity(defaultBrowser)
-    }
+    context.startActivity(defaultBrowser)
 }

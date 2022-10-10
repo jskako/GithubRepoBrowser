@@ -6,6 +6,8 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+apply from: "${rootProject.projectDir}/flavors.gradle"
+
 android {
     namespace 'com.jskako.githubrepobrowser'
     compileSdk 33
@@ -29,6 +31,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    with flavorConfig
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

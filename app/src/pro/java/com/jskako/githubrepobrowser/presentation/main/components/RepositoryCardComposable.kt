@@ -9,15 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.jskako.githubrepobrowser.R
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
-import com.jskako.githubrepobrowser.presentation.util.Screen
 
 @Composable
-fun CardComposable(
+fun RepositoryCardComposable(
     item: GithubRepository,
-    navController: NavController,
     pictureMenuItems: List<String>,
     onPictureClickCallbacks: List<() -> Unit>,
     onCardClickCallbacks: List<() -> Unit>,
