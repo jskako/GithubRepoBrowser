@@ -14,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,13 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.jskako.githubrepobrowser.R
-import com.jskako.githubrepobrowser.data.LANGUAGES_LIST
+import com.jskako.githubrepobrowser.presentation.main.core.LANGUAGES_LIST
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun DialogBoxComposable(
     textQueryListener: MutableStateFlow<String>,
     textLanguageListener: MutableStateFlow<String>,
+    networkAvailable: Boolean,
     onDismiss: () -> Unit
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -59,8 +59,8 @@ fun DialogBoxComposable(
                         .background(color = primaryColor)
                 )
 
-                addSelectionElement(textLanguageListener,"Language", LANGUAGES_LIST)
-                addTextInput(textQueryListener,"Search")
+                addSelectionElement(textLanguageListener, "Language", LANGUAGES_LIST)
+                addTextInput(textQueryListener, "Search", enabled = networkAvailable)
 
                 Text(
                     modifier = Modifier.padding(start = 12.dp, end = 12.dp),

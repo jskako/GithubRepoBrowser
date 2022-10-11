@@ -34,11 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
-import com.jskako.githubrepobrowser.domain.util.openInBrowser
+import com.jskako.githubrepobrowser.domain.network.ConnectionState
+import com.jskako.githubrepobrowser.domain.network.ConnectivityState
+import com.jskako.githubrepobrowser.domain.network.openInBrowser
 import com.jskako.githubrepobrowser.domain.util.toast
 import com.jskako.githubrepobrowser.presentation.main.components.RepositoryCardComposable
 import com.jskako.githubrepobrowser.presentation.main.components.DialogBoxComposable
 import com.jskako.githubrepobrowser.presentation.main.components.OrderSection
+import com.jskako.githubrepobrowser.presentation.main.components.createNetworkAvailableBox
 import com.jskako.githubrepobrowser.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,6 +63,8 @@ fun createMainScreen(context: Context, viewModel: MainViewModel, navController: 
     var openDialog by remember {
         mutableStateOf(false)
     }
+    val connection by ConnectivityState()
+    val networkAvailable = connection === ConnectionState.Available
 
     coroutineScope.launch {
         fetchQuerySuccessfully.collectLatest {
@@ -92,13 +97,15 @@ fun createMainScreen(context: Context, viewModel: MainViewModel, navController: 
             if (openDialog) {
                 DialogBoxComposable(
                     viewModel.textQueryListener,
-                    viewModel.textLanguageListener
+                    viewModel.textLanguageListener,
+                    networkAvailable
                 ) {
                     openDialog = false
                 }
             }
         }
     ) {
+        createNetworkAvailableBox(networkAvailable)
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -1,6 +1,7 @@
 package com.jskako.githubrepobrowser.presentation.main
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jskako.githubrepobrowser.domain.model.GithubRepository
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    val state: SavedStateHandle,
     private val mainUseCases: MainUseCases,
     private var sharedRepositoryData: SharedRepositoryImpl
 ) : ViewModel() {
@@ -22,23 +24,26 @@ class MainViewModel @Inject constructor(
     val repositoryItems = sharedRepositoryData.getRepositoryItems()
     private val _state = mutableStateOf(OrderState())
     val orderState: State<OrderState> = _state
-    
+
+    private fun saveState(key: String, value: String) = run { state[key] = value }
+    private fun getState(key: String): String? = state.get<String>(key)
+
     val textQueryListener = MutableStateFlow("")
     val textLanguageListener = MutableStateFlow("")
-
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val fetchQuerySuccessfully = textQueryListener.debounce(2000)
         .distinctUntilChanged()
         .flatMapLatest {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty() && getState(QUERY_KEY) != it) {
+                saveState(QUERY_KEY, it)
                 getAllRepositories(it, textLanguageListener.value)
             } else {
                 flowOf(FetchSuccessful.IGNORE)
             }
         }
 
-    private suspend fun getAllRepositories(
+    private fun getAllRepositories(
         repositoryName: String,
         language: String = ""
     ): Flow<FetchSuccessful> {
@@ -95,3 +100,5 @@ class MainViewModel @Inject constructor(
 enum class FetchSuccessful {
     SUCCESSFUL, NOT_SUCCESSFUL, IGNORE
 }
+
+private const val QUERY_KEY = "QUERY"

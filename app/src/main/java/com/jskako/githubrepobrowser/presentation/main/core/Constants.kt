@@ -1,8 +1,4 @@
-package com.jskako.githubrepobrowser.data
-
-/**
- * Those are mocked data which should be replaced with API call
- */
+package com.jskako.githubrepobrowser.presentation.main.core
 
 val LANGUAGES_LIST = listOf(
     "HTML",
